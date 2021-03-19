@@ -8,7 +8,13 @@ public class Game {
     private Deck deck;
 
     public Game(ArrayList<Player> players) {
-        this.players = players;
+
+        // Always start the game with a dealer to ensure dealer is always at index 0
+        this.players = new ArrayList<Player>();
+        this.players.add(new Player("Dealer"));
+
+        // Add rest of players
+        this.players.addAll(players);
         this.deck = new Deck();
         deck.populate();
         deck.shuffle();
@@ -51,5 +57,15 @@ public class Game {
         } else {
             return false;
         }
+    }
+
+    public int getDealerScore() {
+        Player dealer = this.players.get(0);
+        return dealer.getScore();
+
+    }
+
+    public Player getDealer() {
+        return this.players.get(0);
     }
 }

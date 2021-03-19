@@ -2,19 +2,14 @@ import java.util.ArrayList;
 
 public class Player {
 
-    private int playerNumber;
     private String name;
     private ArrayList<Card> playerHand;
 
-    public Player(int playerNumber, String name) {
-        this.playerNumber = playerNumber;
+    public Player(String name) {
         this.name = name;
         this.playerHand = new ArrayList<Card>();
     }
 
-    public int getPlayerNumber() {
-        return this.playerNumber;
-    }
 
     public String getName() {
         return this.name;
@@ -35,4 +30,9 @@ public class Player {
         }
         return total;
     }
+
+    public Card removeCardFromHand() {
+        return this.playerHand.remove(0);
+    }
+
 }

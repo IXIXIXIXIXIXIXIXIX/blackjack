@@ -16,22 +16,24 @@ public class GameTest {
     Deck deck;
 
     Card card;
+    Card card2;
 
     @Before
     public void before() {
-        player1 = new Player(1, "Laureline");
-        player2 = new Player(2, "Scott");
+        player1 = new Player("Laureline");
+        player2 = new Player("Scott");
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
         deck = new Deck();
         game = new Game(players);
         card = new Card(SuitType.SPADES, RankType.ACE);
+        card2 = new Card(SuitType.SPADES, RankType.NINE);
     }
 
     @Test
     public void canCountPlayers() {
-        assertEquals(2, game.playerCount());
+        assertEquals(3, game.playerCount());
     }
 
     @Test
@@ -48,15 +50,35 @@ public class GameTest {
     }
 
     @Test
+    public void canGetDealerScore(){
+        game.dealToAllPlayers(1);
+        int dealerScore = game.getDealerScore();
+        assertEquals(true, dealerScore > 0);
+    }
+
+
+
+    @Test
     public void canCheckWinner() {
         game.dealToAllPlayers(3);
         Player winner;
-        if(player1.getScore() >= player2.getScore()) {
-            winner = player1;
-        } else {
-            winner = player2;
+        if (!game.isDraw()) {
+            if (player1.getScore() >= player2.getScore()) {
+                winner = player1;
+            } else {
+                winner = player2;
+            }
+
+            if (game.getDealerScore() >= winner.getScore())
+            {
+                // Method getDealer only for testing purposes - remove in production
+                winner = game.getDealer();
+            }
+            assertEquals(winner, game.checkWinner());
         }
-        assertEquals(winner, game.checkWinner());
+        else{
+            assertEquals(true, game.isDraw());
+        }
     }
 
     @Test

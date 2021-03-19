@@ -10,13 +10,8 @@ public class PlayerTest {
 
     @Before
     public void before() {
-        player1 = new Player(1, "Laureline");
+        player1 = new Player("Laureline");
         card = new Card(SuitType.SPADES, RankType.ACE);
-    }
-
-    @Test
-    public void hasPlayerNumber() {
-        assertEquals(1, player1.getPlayerNumber());
     }
 
     @Test
@@ -39,6 +34,14 @@ public class PlayerTest {
     public void canGetScore() {
         player1.addCardToHand(card);
         assertEquals(1, player1.getScore());
+    }
+
+    @Test
+    public void canRemoveCardFromHand() {
+        player1.addCardToHand(card);
+        player1.removeCardFromHand();
+
+        assertEquals(0, player1.getHandSize());
     }
 
 }
