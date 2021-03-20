@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -6,6 +7,8 @@ public class Game {
 
     private ArrayList<Player> players;
     private Deck deck;
+    private Player currentPlayer;
+    private boolean allPlayersDone;
 
     public Game(ArrayList<Player> players) {
 
@@ -18,14 +21,21 @@ public class Game {
         this.deck = new Deck();
         deck.populate();
         deck.shuffle();
+
+        // Set current player
+        this.currentPlayer = this.players.get(1);
+        this.allPlayersDone = false;
     }
 
     public int playerCount() {
         return this.players.size();
     }
 
-    public void deal(Player player) {
-        player.addCardToHand(this.deck.dealOne());
+    public Card deal(Player player) {
+
+        Card newCard = this.deck.dealOne();
+        player.addCardToHand(newCard);
+        return newCard;
     }
 
     public void dealToAllPlayers(int numberOfCards) {
@@ -62,10 +72,108 @@ public class Game {
     public int getDealerScore() {
         Player dealer = this.players.get(0);
         return dealer.getScore();
-
     }
 
     public Player getDealer() {
         return this.players.get(0);
+    }
+
+    public void discardSingleCard(Player player) {
+
+        deck.addCard(player.removeCardFromHand());
+    }
+
+    public void discardHand(Player player) {
+
+        int cardsToRemove = player.getHandSize();
+
+        for (int i = 0; i < cardsToRemove; ++i)
+        {
+            this.discardSingleCard(player);
+        }
+    }
+
+    public void reset() {
+
+        for (Player player: this.players)
+        {
+            this.discardHand(player);
+        }
+
+        // Set current player
+        this.currentPlayer = players.get(1);
+        this.allPlayersDone = false;
+
+        this.deck.shuffle();
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public boolean areAllPlayersDone() {
+        return allPlayersDone;
+    }
+
+    public void nextPlayer() {
+
+        int currentIndex = this.players.indexOf(currentPlayer);
+        if (currentIndex == this.playerCount() - 1)
+        {
+            // After last player, advance to dealer
+            this.currentPlayer = this.players.get(0);
+            this.allPlayersDone = true;
+        }
+        else
+        {
+            this.currentPlayer = this.players.get(currentIndex + 1);
+        }
+    }
+
+    public Card getDealerFaceCard() {
+        return this.players.get(0).getCard(0);
+    }
+
+    public HashMap<String, String> getPrintableScores() {
+
+        Player player;
+        HashMap<String, String> scores = new HashMap<>();
+
+        for (int i = 1; i < this.playerCount(); ++i)
+        {
+            player = this.players.get(i);
+
+            if(player.isBust())
+            {
+                scores.put(player.getName(), "Bust");
+            }
+            else
+            {
+                scores.put(player.getName(), String.valueOf(player.getScore()));
+            }
+        }
+        return scores;
+    }
+
+    public void dealerDraw() {
+
+        while (this.players.get(0).getScore() <= 16)
+        {
+            this.deal(this.players.get(0));
+        }
+    }
+
+    public ArrayList<String> getNotBust() {
+        ArrayList<String> notBust = new ArrayList<>();
+
+        for(Player player : this.players)
+        {
+            if(!player.isBust())
+            {
+                notBust.add(player.getName());
+            }
+        }
+
+        return notBust;
     }
 }

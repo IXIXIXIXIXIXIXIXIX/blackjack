@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -87,5 +88,65 @@ public class GameTest {
         player2.addCardToHand(card);
         assertEquals(true, game.isDraw());
     }
+
+    @Test
+    public void canDiscardSingleCard(){
+        game.deal(player1);
+        game.deal(player1);
+
+        game.discardSingleCard(player1);
+
+        assertEquals(1, player1.getHandSize());
+    }
+
+    @Test
+    public void canDiscardHand() {
+
+        game.deal(player1);
+        game.deal(player1);
+
+        game.discardHand(player1);
+        assertEquals(0, player1.getHandSize());
+    }
+
+    @Test
+    public void canResetGame() {
+        game.dealToAllPlayers(2);
+        game.reset();
+
+        assertEquals(0, player1.getHandSize());
+        assertEquals(0, player2.getHandSize());
+    }
+
+    @Test
+    public void canGetCurrentPlayer() {
+        assertEquals(player1, game.getCurrentPlayer());
+    }
+    @Test
+    public void canCheckNotDone() {
+        assertEquals(false, game.areAllPlayersDone());
+    }
+
+    @Test
+    public void canAdvancePlayer(){
+        game.nextPlayer();
+        assertEquals(player2, game.getCurrentPlayer());
+        assertEquals(false, game.areAllPlayersDone());
+
+    }
+
+    @Test
+    public void canDetectLastPlayerDone(){
+        game.nextPlayer();
+        game.nextPlayer();
+        assertEquals(true, game.areAllPlayersDone());
+    }
+
+    @Test
+    public void canReturnScoresHashMap(){
+        assertEquals(2, game.getPrintableScores().size());
+    }
+
+
 
 }

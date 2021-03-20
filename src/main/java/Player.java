@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Player {
 
@@ -25,8 +26,20 @@ public class Player {
 
     public int getScore() {
         int total = 0;
+        boolean containsAce = false;
+
         for(Card card : this.playerHand) {
             total += card.getValueFromEnum();
+            if (card.getRank() == RankType.ACE)
+            {
+                containsAce = true;
+            }
+        }
+
+        // If there is an ace that can be scored 11, do so
+        if (total < 12 && containsAce)
+        {
+            total += 10;
         }
         return total;
     }
@@ -35,4 +48,15 @@ public class Player {
         return this.playerHand.remove(0);
     }
 
+    public boolean isBust() {
+        return !(this.getScore() <= 21);
+    }
+
+    public Card getCard(int index){
+        return this.playerHand.get(index);
+    }
+
+    public ArrayList<Card> getHand() {
+        return this.playerHand;
+    }
 }

@@ -7,7 +7,7 @@ public class Decider {
         Character option;
 
         do {
-            System.out.println("Would you like to add another player? (y/n)");
+            System.out.println(prompt);
             option = Character.toLowerCase(scanner.next().toCharArray()[0]);
         }
         while(option != 'y' && option != 'n');

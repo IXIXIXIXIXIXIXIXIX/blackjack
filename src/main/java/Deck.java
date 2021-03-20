@@ -38,4 +38,8 @@ public class Deck {
     public Card dealOne() {
         return cards.remove(0);
     }
+
+    public void addCard(Card card) {
+        this.cards.add(card);
+    }
 }

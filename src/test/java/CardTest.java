@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 public class CardTest {
 
     private Card card;
+    private Card card2;
 
     @Before
     public void before(){

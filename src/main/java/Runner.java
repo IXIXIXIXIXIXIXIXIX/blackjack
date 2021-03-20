@@ -41,22 +41,72 @@ public class Runner {
         game = new Game(players);
         Player currentPlayer;
 
+
         do {
+            // Deal initial 2 cards
+            game.dealToAllPlayers(2);
 
-            for (int playerNumber = 1; playerNumber < game.playerCount(); ++playerNumber)
+            while(!game.areAllPlayersDone())
             {
+                Outputter.printGameStatus(game);
+                currentPlayer = game.getCurrentPlayer();
+                Outputter.printHand(currentPlayer);
+                while(!currentPlayer.isBust() && Decider.getYorN(scanner, "Would you like another card? (y/n)") == 'y')
+                {
+                    System.out.println("Your new card is:");
+                    Outputter.printCard(game.deal(currentPlayer));
+                    Outputter.printGameStatus(game);
+                    Outputter.printHand(currentPlayer);
+                }
 
-                // loop until decline or bust
-                //print status
+                if(currentPlayer.isBust())
+                {
+                    Outputter.printBust();
+                }
 
-                Decider.getYorN(scanner, "Would you like another card? (y/n)");
+                game.nextPlayer();
             }
 
-            // Dealer's turn
-            // print status
-            // Get and print winner
+            // Dealer section of game
+            Outputter.printGameStatus(game);
+            ArrayList<String> notBust = game.getNotBust();
+            if (notBust.size() == 1)
+            {
+                System.out.println("Dealer's hand:");
+                Outputter.printHand(game.getDealer());
+                System.out.println("Dealer Wins!");
+            }
+            else
+                {
+                System.out.println("Dealer Draws...");
+                game.dealerDraw();
+                if (game.getDealer().isBust()) {
+                    Outputter.printHand(game.getDealer());
+                    System.out.println("Dealer is bust!");
 
-            Decider.getYorN(scanner, "Would you like to play another round? (y/n)");
+                    notBust = game.getNotBust();
+                    if (notBust.size() == 1)
+                    {
+                        System.out.println("Winner is " + notBust.get(0));
+                    }
+                    else
+                    {
+                        System.out.println("Winners are:");
+                        for (String name: notBust)
+                        {
+                            System.out.println(name);
+                        }
+                    }
+                } else {
+                    System.out.println("Dealer's hand:");
+                    Outputter.printHand(game.getDealer());
+                    System.out.println("Dealer score is " + game.getDealer().getScore());
+                    System.out.println("Winner is " + game.checkWinner().getName() + "!");
+                }
+
+            }
+            game.reset();
+            option = Decider.getYorN(scanner, "Would you like to play another round? (y/n)");
         }
         while(option == 'y');
 

@@ -8,12 +8,16 @@ import static org.junit.Assert.*;
 
 public class DeckTest {
 
-    Deck deck;
+    private Deck deck;
+    private Card card;
 
     @Before
     public void before(){
         deck = new Deck();
+        card = new Card(SuitType.SPADES, RankType.ACE);
+
     }
+
 
     @Test
     public void deckStartsEmpty(){
@@ -61,5 +65,10 @@ public class DeckTest {
         assertEquals(1, playerHand.size());
     }
 
+    @Test
+    public void canAddOneCard(){
+        deck.addCard(card);
+        assertEquals(1, deck.getSize());
 
+    }
 }
