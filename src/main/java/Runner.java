@@ -69,7 +69,7 @@ public class Runner {
 
             // Dealer section of game
             Outputter.printGameStatus(game);
-            ArrayList<String> notBust = game.getNotBust();
+            ArrayList<Player> notBust = game.getNotBust();
             if (notBust.size() == 1)
             {
                 System.out.println("Dealer's hand:");
@@ -87,14 +87,14 @@ public class Runner {
                     notBust = game.getNotBust();
                     if (notBust.size() == 1)
                     {
-                        System.out.println("Winner is " + notBust.get(0));
+                        System.out.println("Winner is " + notBust.get(0).getName());
                     }
                     else
                     {
                         System.out.println("Winners are:");
-                        for (String name: notBust)
+                        for (Player winningPlayer: notBust)
                         {
-                            System.out.println(name);
+                            System.out.println(winningPlayer.getName());
                         }
                     }
                 } else {

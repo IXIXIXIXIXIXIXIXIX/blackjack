@@ -19,4 +19,11 @@ public class Card {
         return this.rank.getValue();
     }
 
+    public int getRankPrecedence() {
+        return this.rank.getPrecedence();
+    }
+
+    public  int getSuitPrecedence() {
+        return  this.suit.getPrecedence();
+    }
 }

@@ -46,28 +46,138 @@ public class Game {
         }
     }
 
-    public Player checkWinner() {
-        Player winner = this.players.get(0);
-        for(Player player : this.players) {
-            if(winner.getScore() <= player.getScore()) {
-                winner = player;
+    private int getHighScore() {
+        int high = 0;
+
+        for (Player player: this.players)
+        {
+            if (player.getScore() > high)
+            {
+                high = player.getScore();
             }
         }
-        return winner;
+        return high;
+    }
+
+    private boolean allBust() {
+        return this.getNotBust().size() == 0;
     }
 
     public boolean isDraw() {
-        ArrayList<Integer> scores = new ArrayList<>();
-        for(Player player : this.players) {
-            scores.add(player.getScore());
-        }
-        Set<Integer> set = new HashSet<Integer>(scores);
-        if(set.size() < scores.size()) {
+
+        if (allBust())
+        {
             return true;
-        } else {
+        }
+
+        int highScore = getHighScore();
+        int highCount = 0;
+
+        for(Player player : this.players) {
+            if (player.getScore() == highScore)
+            {
+                ++highCount;
+            }
+        }
+
+        if(highCount > 1)
+        {
+            return true;
+        } else
+        {
             return false;
         }
     }
+
+    private Card compareCards(Card card1, Card card2)
+    {
+        if (card1 == card2)
+        {
+            return card1;
+        }
+        if (card1.getRankPrecedence() > card2.getRankPrecedence())
+        {
+            return card1;
+        }
+
+        if (card1.getRankPrecedence() < card2.getRankPrecedence())
+        {
+            return card2;
+        }
+
+        if (card1.getSuitPrecedence() > card2.getSuitPrecedence())
+        {
+            return card1;
+        }
+        else
+        {
+            return card2;
+        }
+    }
+
+    private Card highCard(Player player) {
+
+        ArrayList<Card> hand = player.getHand();
+        Card highest = hand.get(0);
+
+        for(Card card: hand)
+        {
+            highest = this.compareCards(highest, card);
+        }
+
+        return highest;
+    }
+
+    private Player compareTiedPlayers(Player player1, Player player2){
+
+        if (player1 == player2)
+        {
+            return player1;
+        }
+        if (compareCards(highCard(player1), highCard((player2))) == highCard(player1))
+        {
+            return player1;
+        }
+        else
+        {
+            return player2;
+        }
+    }
+
+    public Player checkWinner() {
+
+        Player winner;
+        if (!isDraw()) {
+            winner = this.getNotBust().get(0);
+            for (Player player: this.players) {
+                if (winner.getScore() <= player.getScore()) {
+                    winner = player;
+                }
+            }
+            return winner;
+        }
+
+
+        int highScore = getHighScore();
+        ArrayList<Player> topPlayers = new ArrayList<>();
+        for(Player player: this.players)
+        {
+            if (player.getScore() == highScore)
+            {
+                topPlayers.add(player);
+            }
+        }
+
+        winner = topPlayers.get(0);
+
+        for(Player player: topPlayers)
+        {
+            winner = compareTiedPlayers(winner, player);
+        }
+
+        return winner;
+    }
+
 
     public int getDealerScore() {
         Player dealer = this.players.get(0);
@@ -163,17 +273,18 @@ public class Game {
         }
     }
 
-    public ArrayList<String> getNotBust() {
-        ArrayList<String> notBust = new ArrayList<>();
+    public ArrayList<Player> getNotBust() {
+        ArrayList<Player> notBust = new ArrayList<>();
 
         for(Player player : this.players)
         {
             if(!player.isBust())
             {
-                notBust.add(player.getName());
+                notBust.add(player);
             }
         }
-
         return notBust;
     }
+
+
 }
