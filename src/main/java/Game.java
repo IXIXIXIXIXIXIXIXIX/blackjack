@@ -49,7 +49,7 @@ public class Game {
     private int getHighScore() {
         int high = 0;
 
-        for (Player player: this.players)
+        for (Player player: this.getNotBust())
         {
             if (player.getScore() > high)
             {
@@ -134,6 +134,18 @@ public class Game {
         {
             return player1;
         }
+
+        if (player1.getScore() == 21 && player1.getHandSize() == 2 && player2.getHandSize() > 2)
+        {
+            return player1;
+        }
+
+        if (player2.getScore() == 21 && player2.getHandSize() == 2 && player1.getHandSize() > 2)
+        {
+            return player2;
+        }
+
+
         if (compareCards(highCard(player1), highCard((player2))) == highCard(player1))
         {
             return player1;
@@ -149,7 +161,7 @@ public class Game {
         Player winner;
         if (!isDraw()) {
             winner = this.getNotBust().get(0);
-            for (Player player: this.players) {
+            for (Player player: this.getNotBust()) {
                 if (winner.getScore() <= player.getScore()) {
                     winner = player;
                 }
@@ -160,7 +172,8 @@ public class Game {
 
         int highScore = getHighScore();
         ArrayList<Player> topPlayers = new ArrayList<>();
-        for(Player player: this.players)
+
+        for(Player player: this.getNotBust())
         {
             if (player.getScore() == highScore)
             {

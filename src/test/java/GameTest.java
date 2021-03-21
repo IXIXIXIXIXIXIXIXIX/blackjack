@@ -61,25 +61,15 @@ public class GameTest {
 
     @Test
     public void canCheckWinner() {
-        game.dealToAllPlayers(3);
-        Player winner;
-        if (!game.isDraw()) {
-            if (player1.getScore() >= player2.getScore()) {
-                winner = player1;
-            } else {
-                winner = player2;
-            }
+        game.getDealer().addCardToHand(card);
+        player1.addCardToHand(card);
+        player1.addCardToHand(card2);
 
-            if (game.getDealerScore() >= winner.getScore())
-            {
-                // Method getDealer only for testing purposes - remove in production
-                winner = game.getDealer();
-            }
-            assertEquals(winner, game.checkWinner());
-        }
-        else{
-            assertEquals(true, game.isDraw());
-        }
+        player2.addCardToHand(card2);
+        player2.addCardToHand(card2);
+        player2.addCardToHand(card2);
+
+        assertEquals(player1, game.checkWinner());
     }
 
     @Test
